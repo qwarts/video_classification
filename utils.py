@@ -76,35 +76,68 @@ def calculate_accuracy(outputs, targets):
     return n_correct_elems / batch_size
 
 
-def calculate_accuracy_single_target(outputs, targets):
+def calculate_accuracy_mse(outputs, targets):
     batch_size = targets.size(0)
-
-    # print("OP: ")
-    # print(outputs)
-    # print("TG: ")
-    # print(targets)
 
     _, pred = outputs.topk(1, 1, True)
     pred = pred.t()
+    
+    _, targ = targets.topk(1, 1, True)
+    targ = targ.t()
     
     # print("Pred: ")
     # print(pred)
     
     # print("Targ: ")
-    # print(targets.view(1, -1))
+    # # print(targets.view(1, -1))
+    # print(targ)
+    
+    # correct = pred.eq(targets.view(1, -1))
+    
+    correct = pred.eq(targ)
+    
+    # print(correct)
+    # print(correct.float())
+    # print(correct.float().sum())
+    print(correct.float().sum().data)
+    # print(correct.float().sum().data[0])
+    try:
+        n_correct_elems = correct.float().sum().data[0]
+    except:
+        n_correct_elems = correct.float().sum().data
+
+    return n_correct_elems / batch_size
+
+def calculate_accuracy_single_target(outputs, targets):
+    batch_size = targets.size(0)
+    labels_size = targets.size(1)
+
+    print("OP: ")
+    print(outputs)
+    print("TG: ")
+    print(targets)
+
+    _, pred = outputs.topk(1, 1, True)
+    pred = pred.t()
+    
+    print("Pred: ")
+    print(pred)
+    
+    print("Targ: ")
+    print(targets.view(1, -1))
     
     OP_digi = outputs > 0.5
-    # print("OP digi: ")
-    # print(OP_digi)
+    print("OP digi: ")
+    print(OP_digi)
     TG_digi = targets > 0.5
-    # print("TG digi: ")
-    # print(TG_digi)
+    print("TG digi: ")
+    print(TG_digi)
     
     correct = sum(OP_digi == TG_digi)
     
     # correct = pred.eq(targets.view(1, -1))
     
-    # print(correct)
+    print(correct)
     # print(correct.float())
     # print(correct.float().sum())
     # print(correct.float().sum().data)
@@ -113,5 +146,7 @@ def calculate_accuracy_single_target(outputs, targets):
         n_correct_elems = correct.float().sum().data[0]
     except:
         n_correct_elems = correct.float().sum().data
+    print("n_correct_elems")
+    print(n_correct_elems)
 
-    return n_correct_elems / batch_size
+    return n_correct_elems / batch_size*labels_size

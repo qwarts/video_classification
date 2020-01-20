@@ -98,6 +98,7 @@ def make_dataset(video_path, sample_duration):
         sample_i = copy.deepcopy(sample)
         sample_i['frame_indices'] = list(range(i, i + sample_duration))
         sample_i['segment'] = torch.IntTensor([i, i + sample_duration - 1])
+        # sample_i['label'] = label
         dataset.append(sample_i)
 
     return dataset

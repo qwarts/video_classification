@@ -14,6 +14,7 @@ from model import generate_model
 from mean import get_mean
 from classify import classify_video
 from train import train_epoch, train_main
+from target_transforms import ClassLabel
 
 from zipfile import ZipFile
 
@@ -28,11 +29,10 @@ if __name__=="__main__":
     opt.arch = '{}-{}'.format(opt.model_name, opt.model_depth)
     opt.sample_size = 112
     opt.sample_duration = 16
-    opt.n_classes = 1#400
+    opt.n_classes = 2#400
 
     model = generate_model(opt)
     
-    # print(model)
     opt.model = 'model.pth'
     opt.model = '/data/save_1.pth'
     # print("lala " + opt.model)
@@ -62,11 +62,17 @@ if __name__=="__main__":
     # with zipfile.ZipFile(file_name) as zf:
     #     zf.extractall(save_dir)
     
+    # data_file_path = '/data/databases/deep-fake/train_sample_videos/metadata.json'
+    # with open(data_file_path, 'r') as data_file:
+    #     labels2 = json.load(data_file)
+    #     print(labels2['esxrvsgpvb.mp4']['label'])
+    # exit(1)
+    
+    
     input_root_dir = '/data/databases/deep-fake/data/'
     train_main(model, input_root_dir, opt)
     
-    
-    exit(21)
+   
     
     if opt.verbose:
         print(model)
@@ -100,7 +106,9 @@ if __name__=="__main__":
     
     import pandas as pd
     labels = pd.read_json('/data/databases/deep-fake/train_sample_videos/metadata.json')
-    
+    labels2 = json.load('/data/databases/deep-fake/train_sample_videos/metadata.json')
+    print(labels2)
+    exit(1)
 #     ####
     
     
