@@ -13,7 +13,7 @@ from opts import parse_opts
 from model import generate_model
 from mean import get_mean
 from classify import classify_video
-from train import train_epoch, train_main
+from train import train_epoch, train_main, train_main_multi_batch
 from target_transforms import ClassLabel
 
 from zipfile import ZipFile
@@ -35,6 +35,7 @@ if __name__=="__main__":
     
     opt.model = 'model.pth'
     opt.model = '/data/save_1.pth'
+    opt.model = '/data/codebases/video_classification/model300.pth'
     # print("lala " + opt.model)
     # model['arch'] = 'resnet-34'
     # opt.arch = 'resnet-34'
@@ -49,7 +50,7 @@ if __name__=="__main__":
     # print(model_data['arch'])
     
     # assert opt.arch == model_data['arch']
-    # model.load_state_dict(model_data['state_dict'])
+    model.load_state_dict(model_data)#['state_dict']
     # model.eval()
     
     # model = model_data
@@ -70,8 +71,8 @@ if __name__=="__main__":
     
     
     input_root_dir = '/data/databases/deep-fake/data/'
-    train_main(model, input_root_dir, opt)
-    
+    # train_main(model, input_root_dir, opt)
+    train_main_multi_batch(model, input_root_dir, opt)
    
     
     if opt.verbose:
